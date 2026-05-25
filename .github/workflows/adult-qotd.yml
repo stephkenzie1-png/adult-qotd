@@ -1,0 +1,57 @@
+name: Adult Discord QOTD
+
+on:
+  schedule:
+    - cron: "0 11 * * *"
+  workflow_dispatch:
+
+jobs:
+  post-qotd:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Post Adult QOTD
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.ADULT_DISCORD_WEBHOOK_URL }}
+        run: |
+          DATE=$(TZ="America/New_York" date +"%B %-d, %Y")
+
+          QUESTIONS=(
+            "What’s your biggest turn-on?"
+            "What’s your ideal first date?"
+            "What’s your favorite kind of flirting?"
+            "What’s something subtle you find insanely attractive?"
+            "What’s your biggest relationship green flag?"
+            "What’s your biggest relationship red flag?"
+            "What’s your love language?"
+            "What’s your favorite kind of chemistry?"
+            "What’s something that instantly kills attraction?"
+            "What’s your favorite romantic memory?"
+            "What’s your favorite physical feature on someone?"
+            "What’s your favorite kind of teasing?"
+            "What’s something that gives you butterflies?"
+            "What’s your ideal cuddle situation?"
+            "What’s the hottest personality trait?"
+            "What’s your favorite thing about physical affection?"
+            "What’s your dream romantic vacation?"
+            "What’s your favorite type of kiss?"
+            "What’s your biggest celebrity crush?"
+            "What’s something emotionally attractive to you?"
+            "What’s your favorite late-night conversation topic?"
+            "What’s your favorite thing someone can whisper to you?"
+            "What’s your favorite type of chemistry?"
+            "What’s your ideal cozy night together?"
+            "What instantly makes someone more attractive?"
+            "What’s your favorite thing about attraction?"
+            "What’s your favorite thing about emotional intimacy?"
+            "What’s your favorite type of flirting energy?"
+            "What’s your favorite thing about tension before a kiss?"
+            "What’s your favorite romantic vibe?"
+          )
+
+          QUESTION=${QUESTIONS[$RANDOM % ${#QUESTIONS[@]}]}
+
+        curl -H "Content-Type: application/json" \
+  -X POST \
+  -d "{\"content\":\"<@&1394662252413452340> 🔞 Adult QOTD ($DATE)\n\n$QUESTION\"}" \
+  "$DISCORD_WEBHOOK_URL"
