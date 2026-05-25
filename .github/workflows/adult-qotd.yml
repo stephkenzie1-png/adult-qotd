@@ -37,10 +37,30 @@ jobs:
             "What is your favorite date night idea?"
             "What is your favorite thing about romantic tension?"
             "What is your favorite thing someone can whisper to you?"
+            "What is your favorite physical feature on someone?"
+            "What is your favorite kind of chemistry?"
+            "What is your favorite thing about cuddling?"
+            "What is your dream romantic vacation?"
+            "What instantly makes someone more attractive?"
+            "What is your favorite kind of eye contact?"
+            "What is your biggest dating green flag?"
+            "What is your favorite kind of attraction?"
+            "What is your favorite thing about emotional intimacy?"
+            "What is your favorite late-night vibe?"
+            "What is your ideal romantic weekend?"
+            "What is your favorite kind of tension?"
+            "What is your favorite thing about being desired?"
+            "What is your favorite flirt move?"
+            "What is your favorite thing about attraction growing slowly?"
+            "What is your ideal cozy night?"
+            "What is your favorite thing to hear from a partner?"
+            "What is your favorite thing about chemistry in person?"
+            "What is your favorite thing about physical affection?"
+            "What is your favorite romantic aesthetic?"
           )
 
           QUESTION=${QUESTIONS[$RANDOM % ${#QUESTIONS[@]}]}
 
           curl -X POST "$DISCORD_WEBHOOK_URL" \
           -H "Content-Type: application/json" \
-          -d "{\"content\":\"<@&PUT_ROLE_ID_HERE> 🔞 Adult QOTD ($DATE)\n\n$QUESTION\"}"
+          -d "{\"content\":\"<@&1360631640648323114> 🔞 Adult QOTD ($DATE)\n\n$QUESTION\"}"
