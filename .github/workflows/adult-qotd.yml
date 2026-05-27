@@ -2,7 +2,7 @@ name: Adult Discord QOTD
 
 on:
   schedule:
-    - cron: '15 11 * * *'
+    - cron: '0 9 * * *'
   workflow_dispatch:
 
 jobs:
