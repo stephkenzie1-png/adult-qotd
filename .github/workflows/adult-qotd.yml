@@ -2,7 +2,7 @@ name: Adult Discord QOTD
 
 on:
   schedule:
-    - cron: '0 7 * * *'   # Runs at 7:00 AM UTC → 2:00 AM EST / 3:00 AM EDT (always inside 2-6 AM window)
+    - cron: '0 7 * * *'   # Runs at 7:00 AM UTC → 2:00 AM EST / 3:00 AM EDT (inside 2-6 AM window)
   workflow_dispatch:
 
 jobs:
@@ -322,7 +322,7 @@ jobs:
             "Do you enjoy size or strength play?"
             "What’s your favorite way to beg?"
             "Have you ever had a life-changing orgasm on your journey?"
-            "What turns you on most about your desires?"
+            "What turns you on most about your desires as a trans person?"
             "If you could have one perfect NSFW day, what would it be?"
             "What’s the hottest change in your chest or hips that turns you on?"
             "Do you like partners focusing on your new curves or muscle?"
@@ -380,7 +380,7 @@ jobs:
             "If you could relive one hot moment from your journey, what would it be?"
           )
           
-          # Use day of year for consistent daily rotation (one unique question per day)
+          # Sequential daily rotation using day of year
           INDEX=$(( (DAY_OF_YEAR - 1) % ${#QUESTIONS[@]} ))
           QUESTION=${QUESTIONS[$INDEX]}
           
