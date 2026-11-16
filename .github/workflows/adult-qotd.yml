@@ -1,3 +1,4 @@
+
 name: Adult Discord QOTD
 
 on:
@@ -10,12 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Post Adult QOTD
+        shell: bash
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.ADULT_DISCORD_WEBHOOK_URL }}
         run: |
+          set -euo pipefail
+
           DATE=$(TZ="America/New_York" date +"%B %-d, %Y")
           DAY_OF_YEAR=$(TZ="America/New_York" date +%j)
-          
+
           QUESTIONS=(
             "What is an unexpected green flag that instantly makes someone more attractive to you?"
             "What is your most controversial dating opinion, and why?"
@@ -94,3 +98,28 @@ jobs:
             "What is the most ridiculous excuse you have used to leave a bad date?"
             "What is a fictional character you had an unexpected crush on?"
             "What is your most embarrassing attempt to look sexy?"
+          )
+
+          DAY_OF_YEAR=$((10#$DAY_OF_YEAR))
+          TOTAL_QUESTIONS=${#QUESTIONS[@]}
+          INDEX=$(( (DAY_OF_YEAR - 1) % TOTAL_QUESTIONS ))
+          QUESTION="${QUESTIONS[$INDEX]}"
+
+          if [ -z "${DISCORD_WEBHOOK_URL:-}" ]; then
+            echo "::error::Discord webhook secret is missing."
+            exit 1
+          fi
+
+          MESSAGE=$(printf "🔞 **Adult Question of the Day**\n📅 %s\n\n💬 **%s**\n\nShare your answers below!" "$DATE" "$QUESTION")
+
+          PAYLOAD=$(jq -n --arg content "$MESSAGE" '{content: $content}')
+
+          curl --fail-with-body --silent --show-error \
+            --connect-timeout 15 \
+            --max-time 30 \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" \
+            "$DISCORD_WEBHOOK_URL"
+
+          echo "Successfully posted Adult QOTD."
