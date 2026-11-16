@@ -3,7 +3,7 @@ name: Adult Discord QOTD
 
 on:
   schedule:
-    - cron: '0 7 * * *'   # Runs at 7:00 AM UTC → 2:00 AM EST / 3:00 AM EDT (inside 2-6 AM window)
+    - cron: '0 7 * * *'   # 2 AM EST / 3 AM EDT
   workflow_dispatch:
 
 jobs:
@@ -16,6 +16,8 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.ADULT_DISCORD_WEBHOOK_URL }}
         run: |
           set -euo pipefail
+
+          ROLE_ID="@adult"
 
           DATE=$(TZ="America/New_York" date +"%B %-d, %Y")
           DAY_OF_YEAR=$(TZ="America/New_York" date +%j)
@@ -110,9 +112,17 @@ jobs:
             exit 1
           fi
 
-          MESSAGE=$(printf "🔞 **Adult Question of the Day**\n📅 %s\n\n💬 **%s**\n\nShare your answers below!" "$DATE" "$QUESTION")
+          if [[ ! "$ROLE_ID" =~ ^[0-9]{17,20}$ ]]; then
+            echo "::error::Invalid Discord Adult role ID."
+            exit 1
+          fi
 
-          PAYLOAD=$(jq -n --arg content "$MESSAGE" '{content: $content}')
+          MESSAGE=$(printf "<@&%s>\n\n🔞 **Adult Question of the Day**\n📅 %s\n\n💬 **%s**\n\nShare your answers below!" "$ROLE_ID" "$DATE" "$QUESTION")
+
+          PAYLOAD=$(jq -n \
+            --arg content "$MESSAGE" \
+            --arg role "$ROLE_ID" \
+            '{content: $content, allowed_mentions: {parse: [], roles: [$role]}}')
 
           curl --fail-with-body --silent --show-error \
             --connect-timeout 15 \
@@ -122,4 +132,4 @@ jobs:
             -d "$PAYLOAD" \
             "$DISCORD_WEBHOOK_URL"
 
-          echo "Successfully posted Adult QOTD."
+          echo "Successfully posted Adult QOTD and tagged the Adult role."
