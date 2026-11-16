@@ -1,4 +1,3 @@
-
 name: Adult Discord QOTD
 
 on:
@@ -17,7 +16,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          ROLE_ID="@adult"
+          ROLE_ID="1360631640648323114"
 
           DATE=$(TZ="America/New_York" date +"%B %-d, %Y")
           DAY_OF_YEAR=$(TZ="America/New_York" date +%j)
@@ -109,11 +108,6 @@ jobs:
 
           if [ -z "${DISCORD_WEBHOOK_URL:-}" ]; then
             echo "::error::Discord webhook secret is missing."
-            exit 1
-          fi
-
-          if [[ ! "$ROLE_ID" =~ ^[0-9]{17,20}$ ]]; then
-            echo "::error::Invalid Discord Adult role ID."
             exit 1
           fi
 
